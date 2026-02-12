@@ -1,12 +1,34 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { ReactComponent as GoogleButton } from "../../assets/images/GoogleButton.svg";
 import { postApi } from "../../services/axios.service";
 import { handleSignInWithGoogleClick } from "../../services/auth.service";
 import useAuth from "../../hooks/useAuth";
 import { ActionTypes, AuthContext } from "../../contexts/AuthContext";
+
+// form validation schema
+const schema = yup.object({
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
+  email: yup.string().email("Provide a valid email").required(),
+  password: yup
+    .string()
+    .min(8, "Password must be atleast 8 characters long")
+    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/\d/, "Password must contain at least one number")
+    .matches(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Password must contain at least one special character",
+    )
+    .required("Password is required"),
+  termsAndConditions: yup
+    .boolean()
+    .oneOf([true], "You must accept the terms and conditions"),
+});
 
 const Register = () => {
   const { toggleModal, updateAuthAction } = useContext(AuthContext);
@@ -14,7 +36,7 @@ const Register = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ resolver: yupResolver(schema) });
 
   const { login } = useAuth();
 
@@ -55,27 +77,13 @@ const Register = () => {
       type: "email",
       fieldName: "email",
       label: "Email",
-      validation: {
-        required: "Email is required",
-        pattern: {
-          value: /^\S+@\S+$/i,
-          message: "Invalid email format",
-        },
-      },
     },
     {
       type: "password",
       fieldName: "password",
       label: "Password",
-      validation: {
-        required: "Password is required",
-        minLength: {
-          value: 8,
-          message: "Password must be at least 8 characters long",
-        },
-      },
     },
-  ];
+  ] as const;
 
   return (
     <div className="flex flex-col items-center p-4 border-2 border-solid shadow-lg w-full border-foreground-night-400 bg-custom-gradient bg-blend-hard-light rounded-xl">
@@ -120,7 +128,7 @@ const Register = () => {
               } text-white border rounded-lg focus:ring focus:ring-indigo-300 bg-foreground-night-100 border-foreground-night-400`}
               type={item.type}
               placeholder={item.label}
-              {...register(item.fieldName, item.validation)}
+              {...register(item.fieldName)}
             />
             {item.fieldName in errors && (
               <p className="mt-1 text-red-600 text-sm ml-1">
@@ -134,9 +142,7 @@ const Register = () => {
           <input
             type="checkbox"
             className="mr-2 border-2 border-solid rounded-lg border-foreground-night-400"
-            {...register("termsAndConditions", {
-              required: "You must accept the terms and conditions",
-            })}
+            {...register("termsAndConditions")}
           />
           I agree to CryptoHunt's Terms and Privacy Policy
           {errors.termsAndConditions && (

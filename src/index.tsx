@@ -6,7 +6,7 @@ import { Web3ReactProvider } from "@web3-react/core";
 
 import connectors from "./connectors/index";
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+  document.getElementById("root") as HTMLElement,
 );
 root.render(
   <React.StrictMode>
@@ -15,6 +15,5 @@ root.render(
         <App />
       </SnackbarProvider>
     </Web3ReactProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
-
