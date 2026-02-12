@@ -100,7 +100,7 @@ const ConnectWallet: React.FC<ConnectModalProps> = ({
                   <a
                     href="#aa"
                     className="ml-1 font-semibold text-primary-900-high-emphasis hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-900-high-emphasis/50 rounded-sm"
-                 >
+                  >
                     Register here
                   </a>
                 </p>

@@ -2,6 +2,7 @@ const logger = require("../utils/logger");
 const errorLogger = require("./error_logger");
 
 function global_error_handler(error, req, res, next) {
+  console.log(error);
   const { status = 500, message, data } = error;
 
   logger.error(`Error: ${message || "Internal server error"}`, {
@@ -21,7 +22,7 @@ function global_error_handler(error, req, res, next) {
     ...(data && { data }),
   };
 
-  errorLogger.error(`${err.name}: ${err.message}\nStack: ${err.stack}`);
+  errorLogger.error(`${error.name}: ${error.message}\nStack: ${error.stack}`);
 
   res.status(status).json(errorResponse);
 }

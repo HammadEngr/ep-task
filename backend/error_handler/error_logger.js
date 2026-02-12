@@ -1,6 +1,6 @@
-import winston from "winston";
-import fs from "fs";
-import path from "path";
+const winston = require("winston");
+const fs = require("fs");
+const path = require("path");
 
 const logsDir = "logs";
 
@@ -23,4 +23,4 @@ const errorLogger = winston.createLogger({
   ],
 });
 
-export default errorLogger;
+module.exports = errorLogger;

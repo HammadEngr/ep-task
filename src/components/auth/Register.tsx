@@ -51,7 +51,8 @@ const Register = () => {
   const onSubmit = async (data: any) => {
     try {
       setApiError("");
-      const result = await postApi("/auth", data);
+      const result = await postApi("/api/new_user", data);
+      console.log("Registration successful: ", result);
       login(result.data);
       toggleModal();
     } catch (e: any) {

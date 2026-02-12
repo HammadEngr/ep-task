@@ -18,7 +18,7 @@ class MockDataService {
     this.tickets = new Map();
     this.ticketMessages = new Map();
     this.sessions = new Map();
-    
+
     // Initialize with sample data
     this.initializeSampleData();
   }
@@ -26,17 +26,38 @@ class MockDataService {
   initializeSampleData() {
     // Sample staking plans
     this.stakingPlans = [
-      { id: 1, price: 100, duration: 30, token: 'MBUSD', staking_percentage: 5, created_at: new Date() },
-      { id: 2, price: 500, duration: 60, token: 'MBUSD', staking_percentage: 8, created_at: new Date() },
-      { id: 3, price: 1000, duration: 90, token: 'MBUSD', staking_percentage: 12, created_at: new Date() },
+      {
+        id: 1,
+        price: 100,
+        duration: 30,
+        token: "MBUSD",
+        staking_percentage: 5,
+        created_at: new Date(),
+      },
+      {
+        id: 2,
+        price: 500,
+        duration: 60,
+        token: "MBUSD",
+        staking_percentage: 8,
+        created_at: new Date(),
+      },
+      {
+        id: 3,
+        price: 1000,
+        duration: 90,
+        token: "MBUSD",
+        staking_percentage: 12,
+        created_at: new Date(),
+      },
     ];
 
     // Sample admin user
     const adminId = 1;
     this.users.set(adminId, {
       id: adminId,
-      address: '0x1234567890123456789012345678901234567890',
-      referral_code: 'ADMIN01',
+      address: "0x1234567890123456789012345678901234567890",
+      referral_code: "ADMIN01",
       referral_id: null,
       token_balance: 10000,
       MBUSD_balance: 50000,
@@ -48,8 +69,8 @@ class MockDataService {
     const userId = 2;
     this.users.set(userId, {
       id: userId,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
-      referral_code: 'USER01',
+      address: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+      referral_code: "USER01",
       referral_id: null,
       token_balance: 5000,
       MBUSD_balance: 25000,
@@ -61,8 +82,8 @@ class MockDataService {
     this.wallets.set(1, {
       id: 1,
       user_id: userId,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
-      chain: 'BSC',
+      address: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+      chain: "BSC",
       is_primary: 1,
       created_at: new Date(),
     });
@@ -77,7 +98,7 @@ class MockDataService {
       staking_duration: 30,
       staking_percentage: 5,
       reward_token: 50,
-      trx_hash: '0x1111111111111111111111111111111111111111',
+      trx_hash: "0x1111111111111111111111111111111111111111",
       is_claim: 1,
       status: 1,
       quantity: 1,
@@ -89,10 +110,10 @@ class MockDataService {
     this.transactions.set(1, {
       id: 1,
       user_id: userId,
-      address: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd',
-      from_address: '0x1111111111111111111111111111111111111111',
-      to_address: '0x2222222222222222222222222222222222222222',
-      hash: '0x3333333333333333333333333333333333333333',
+      address: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+      from_address: "0x1111111111111111111111111111111111111111",
+      to_address: "0x2222222222222222222222222222222222222222",
+      hash: "0x3333333333333333333333333333333333333333",
       busd_amount: 100,
       token: 1000,
       transaction_type_id: 1,
@@ -117,6 +138,14 @@ class MockDataService {
   }
 
   // User operations
+  getUserByEmail(email) {
+    for (const user of this.users.values()) {
+      if (user.email && user.email.toLowerCase() === email.toLowerCase()) {
+        return [user];
+      }
+    }
+    return [];
+  }
   getUserByAddress(address) {
     for (const user of this.users.values()) {
       if (user.address.toLowerCase() === address.toLowerCase()) {
@@ -144,8 +173,14 @@ class MockDataService {
     const id = this.counters.users++;
     const user = {
       id,
+      firstName: data.firstName || null,
+      lastName: data.lastName || null,
+      email: data.email || null,
+      password: data.password || null,
       address: data.address,
-      referral_code: data.referral_code || `REF${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
+      referral_code:
+        data.referral_code ||
+        `REF${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
       referral_id: data.referral_id || null,
       token_balance: 0,
       MBUSD_balance: 0,
@@ -172,7 +207,7 @@ class MockDataService {
       id,
       user_id: data.user_id,
       address: data.address,
-      chain: data.chain || 'BSC',
+      chain: data.chain || "BSC",
       is_primary: data.is_primary ? 1 : 0,
       created_at: new Date(),
     };
@@ -205,7 +240,7 @@ class MockDataService {
   }
 
   getStakingPlanById(id) {
-    return this.stakingPlans.find(plan => plan.id === parseInt(id)) || null;
+    return this.stakingPlans.find((plan) => plan.id === parseInt(id)) || null;
   }
 
   // Staking operations
@@ -233,7 +268,11 @@ class MockDataService {
 
   getStakingById(id, periodId, userId) {
     const staking = this.staking.get(parseInt(id));
-    if (staking && staking.staking_period_id === parseInt(periodId) && staking.user_id === parseInt(userId)) {
+    if (
+      staking &&
+      staking.staking_period_id === parseInt(periodId) &&
+      staking.user_id === parseInt(userId)
+    ) {
       return [staking];
     }
     return [];
@@ -244,12 +283,22 @@ class MockDataService {
     for (const staking of this.staking.values()) {
       if (staking.user_id === parseInt(userId)) {
         // Calculate mock total reward
-        const daysSinceCreation = Math.floor((Date.now() - new Date(staking.created_date).getTime()) / (1000 * 60 * 60 * 24));
-        const totalReward = (staking.reward_token * staking.remaining_quantity * daysSinceCreation) / staking.staking_duration;
+        const daysSinceCreation = Math.floor(
+          (Date.now() - new Date(staking.created_date).getTime()) /
+            (1000 * 60 * 60 * 24),
+        );
+        const totalReward =
+          (staking.reward_token *
+            staking.remaining_quantity *
+            daysSinceCreation) /
+          staking.staking_duration;
         const unstakeDate = new Date(staking.created_date);
         unstakeDate.setDate(unstakeDate.getDate() + staking.staking_duration);
-        const remainingSeconds = Math.max(0, Math.floor((unstakeDate.getTime() - Date.now()) / 1000));
-        
+        const remainingSeconds = Math.max(
+          0,
+          Math.floor((unstakeDate.getTime() - Date.now()) / 1000),
+        );
+
         stakings.push({
           ...staking,
           totalreward: totalReward,
@@ -298,7 +347,10 @@ class MockDataService {
 
   getTransactionByHash(hash) {
     for (const transaction of this.transactions.values()) {
-      if (transaction.hash && transaction.hash.toUpperCase() === hash.toUpperCase()) {
+      if (
+        transaction.hash &&
+        transaction.hash.toUpperCase() === hash.toUpperCase()
+      ) {
         return [transaction];
       }
     }
@@ -329,7 +381,10 @@ class MockDataService {
   getPendingDeposits() {
     const deposits = [];
     for (const transaction of this.transactions.values()) {
-      if (transaction.transaction_type_id === 1 && transaction.isblockchainConfirm === 0) {
+      if (
+        transaction.transaction_type_id === 1 &&
+        transaction.isblockchainConfirm === 0
+      ) {
         deposits.push(transaction);
       }
     }
@@ -434,7 +489,10 @@ class MockDataService {
     let reward = 0;
 
     for (const transaction of this.transactions.values()) {
-      if (transaction.transaction_type_id === 1 && transaction.isblockchainConfirm === 1) {
+      if (
+        transaction.transaction_type_id === 1 &&
+        transaction.isblockchainConfirm === 1
+      ) {
         invested += parseFloat(transaction.busd_amount || 0);
       }
     }
@@ -443,25 +501,31 @@ class MockDataService {
       reward += parseFloat(earning.reward_token || 0);
     }
 
-    return [{
-      invested,
-      investors,
-      reward,
-    }];
+    return [
+      {
+        invested,
+        investors,
+        reward,
+      },
+    ];
   }
 
   getTotalBalance(userId) {
     const user = this.users.get(parseInt(userId));
     if (user) {
-      return [{
-        total_balance: user.token_balance || 0,
-        MBUSD_total_balance: user.MBUSD_balance || 0,
-      }];
+      return [
+        {
+          total_balance: user.token_balance || 0,
+          MBUSD_total_balance: user.MBUSD_balance || 0,
+        },
+      ];
     }
-    return [{
-      total_balance: 0,
-      MBUSD_total_balance: 0,
-    }];
+    return [
+      {
+        total_balance: 0,
+        MBUSD_total_balance: 0,
+      },
+    ];
   }
 
   // Staking earnings
@@ -492,7 +556,9 @@ class MockDataService {
   }
 
   getAllStakingEarnings() {
-    return Array.from(this.stakingEarnings.values()).sort((a, b) => b.id - a.id);
+    return Array.from(this.stakingEarnings.values()).sort(
+      (a, b) => b.id - a.id,
+    );
   }
 
   // Notification operations
@@ -503,7 +569,7 @@ class MockDataService {
       user_id: data.user_id,
       title: data.title,
       message: data.message,
-      type: data.type || 'info',
+      type: data.type || "info",
       is_read: 0,
       created_at: new Date(),
     };
@@ -528,7 +594,7 @@ class MockDataService {
       id,
       user_id: data.user_id,
       subject: data.subject,
-      status: data.status || 'open',
+      status: data.status || "open",
       created_at: new Date(),
     };
     this.tickets.set(id, ticket);
@@ -594,4 +660,3 @@ class MockDataService {
 
 // Export singleton instance
 module.exports = new MockDataService();
-

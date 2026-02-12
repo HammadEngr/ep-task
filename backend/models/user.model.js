@@ -1,6 +1,13 @@
 const mockData = require("../services/mockData.service");
 
 class UserModel {
+  async getUserByEmail(email) {
+    return mockData.getUserByEmail(email);
+  }
+
+  async saveUserDetails(data) {
+    return mockData.createUser(data);
+  }
   async getUsersDetailsAddress(data) {
     return mockData.getUserByAddress(data.address);
   }
