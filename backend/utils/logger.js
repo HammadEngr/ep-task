@@ -1,37 +1,45 @@
-const config = require('../config');
+const config = require("../config");
 
 // Log levels: error < warn < info < debug
 const levels = { error: 0, warn: 1, info: 2, debug: 3 };
 // Default to "error" to keep the console quiet unless overridden
-const currentLevel = (process.env.LOG_LEVEL || 'error').toLowerCase();
+
+// const currentLevel = (process.env.LOG_LEVEL || 'error').toLowerCase();
+// MODIFICATION: Use a function to get the current log level dynamically,
+// it was trying to get env at loadtime which leads to log_level=error every time,
+// so instead we shoudl load it at runtime
+
+function getCurrentLogLevel() {
+  return process.env.LOG_LEVEL || "error";
+}
 
 function shouldLog(level) {
+  const currentLevel = getCurrentLogLevel().toLowerCase();
   return levels[level] <= levels[currentLevel];
 }
 
 const logger = {
   info: (message, ...args) => {
-    if (shouldLog('info')) {
+    if (shouldLog("info")) {
       console.log(`[INFO] ${message}`, ...args);
     }
   },
   error: (message, ...args) => {
-    if (shouldLog('error')) {
+    if (shouldLog("error")) {
       console.error(`[ERROR] ${message}`, ...args);
     }
   },
   warn: (message, ...args) => {
-    if (shouldLog('warn')) {
+    if (shouldLog("warn")) {
       console.warn(`[WARN] ${message}`, ...args);
     }
   },
   debug: (message, ...args) => {
-    if (shouldLog('debug')) {
+    if (shouldLog("debug")) {
       console.log(`[DEBUG] ${message}`, ...args);
     }
   },
-  level: currentLevel,
+  level: getCurrentLogLevel().toLocaleLowerCase(),
 };
 
 module.exports = logger;
-
