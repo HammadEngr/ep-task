@@ -80,7 +80,9 @@ const AuthContextProvider = ({ children }: any) => {
 
   const updateAuthAction = (inputAction: string) => {
     setAuthAction(
-      AuthActions.find(({ action }) => action === inputAction) as AuthActionType
+      AuthActions.find(
+        ({ action }) => action === inputAction,
+      ) as AuthActionType,
     );
   };
 

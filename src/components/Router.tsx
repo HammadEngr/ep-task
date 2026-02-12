@@ -1,17 +1,18 @@
 import React from "react";
+import { lazy } from "react";
 
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
-import Dashboard from "../views/Dashboard";
-import ExchangeDashboard from "../views/ExchangeDashboard";
 import Footer from "./Footer";
 import Header from "./Header";
-import GoogleLogin from "../views/GoogleLogin";
-import GoogleRedirect from "../views/GoogleRedirect";
-import ResetPassword from "./auth/ResetPassword";
-import PublicRoutes from "./helper/PublicRoutes.tsx";
-import PrivateRoutes from "./helper/PrivateRoutes";
-import Profile from "./profile/Profile";
-import EditProfile from "./profile/EditProfile";
+const Dashboard = lazy(() => import("../views/Dashboard"));
+const ExchangeDashboard = lazy(() => import("../views/ExchangeDashboard"));
+const GoogleLogin = lazy(() => import("../views/GoogleLogin"));
+const GoogleRedirect = lazy(() => import("../views/GoogleRedirect"));
+const ResetPassword = lazy(() => import("./auth/ResetPassword"));
+const PublicRoutes = lazy(() => import("./helper/PublicRoutes.tsx"));
+const PrivateRoutes = lazy(() => import("./helper/PrivateRoutes"));
+const Profile = lazy(() => import("./profile/Profile"));
+const EditProfile = lazy(() => import("./profile/EditProfile"));
 
 const Layout = () => {
   return (

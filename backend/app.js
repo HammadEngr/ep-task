@@ -6,8 +6,7 @@ const config = require("./config");
 const logger = require("./utils/logger");
 const socketService = require("./services/socket.service");
 const { routes } = require("./routes/routes");
-const errorMiddleware = require("./middleware/error.middleware");
-
+const global_error_handler = require("./error_handler/global_error_handler");
 // Initialize mock data service (replaces database)
 require("./services/mockData.service");
 
@@ -45,7 +44,7 @@ app.get("/", (req, res) => {
 app.use("/api", routes);
 
 // Error handling middleware (must be last)
-app.use(errorMiddleware);
+app.use(global_error_handler);
 
 // Start server
 if (require.main === module) {

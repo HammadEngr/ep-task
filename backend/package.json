@@ -49,6 +49,7 @@
     "tiny-secp256k1": "^2.2.3",
     "tronweb": "^6.0.4",
     "validate-phone-number-node-js": "0.0.1",
+    "winston": "^3.19.0",
     "xlsx": "^0.18.5",
     "xrpl": "^3.1.0"
   },

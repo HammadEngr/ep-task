@@ -1,4 +1,4 @@
-const mockData = require('../services/mockData.service');
+const mockData = require("../services/mockData.service");
 
 class UserModel {
   async getUsersDetailsAddress(data) {
@@ -38,7 +38,7 @@ class UserModel {
 
   async checkHash(data) {
     const transactions = mockData.getTransactionByHash(data.hash);
-    return transactions.map(t => ({ id: t.id }));
+    return transactions.map((t) => ({ id: t.id }));
   }
 
   async saveDepositBUSDDetails(data) {
@@ -58,25 +58,33 @@ class UserModel {
   async checkPeriodId(data) {
     const plan = mockData.getStakingPlanById(data.staking_period_id);
     if (plan) {
-      return [{
-        id: plan.id,
-        price: plan.price,
-        duration: plan.duration,
-        token: plan.token,
-      }];
+      return [
+        {
+          id: plan.id,
+          price: plan.price,
+          duration: plan.duration,
+          token: plan.token,
+        },
+      ];
     }
     return [];
   }
 
   async stakingQuantity(data) {
-    const stakings = mockData.getStakingById(data.staking_id, data.staking_period_id, data.user_id);
+    const stakings = mockData.getStakingById(
+      data.staking_id,
+      data.staking_period_id,
+      data.user_id,
+    );
     if (stakings.length > 0) {
       const staking = stakings[0];
-      return [{
-        id: staking.id,
-        reward_token: staking.reward_token,
-        remaining_quantity: staking.remaining_quantity,
-      }];
+      return [
+        {
+          id: staking.id,
+          reward_token: staking.reward_token,
+          remaining_quantity: staking.remaining_quantity,
+        },
+      ];
     }
     return [];
   }
@@ -111,7 +119,7 @@ class UserModel {
 
     // Update balance
     const mbusdBalance = parseFloat(data.token_amount * data.quantity);
-    mockData.updateUserBalance(data.user_id, 'MBUSD_balance', -mbusdBalance);
+    mockData.updateUserBalance(data.user_id, "MBUSD_balance", -mbusdBalance);
 
     return result;
   }
@@ -167,18 +175,28 @@ class UserModel {
   }
 
   async rewardClaimCheck(data) {
-    const staking = mockData.getStakingById(data.staking_id, data.staking_period_id, data.user_id);
+    const staking = mockData.getStakingById(
+      data.staking_id,
+      data.staking_period_id,
+      data.user_id,
+    );
     if (staking.length > 0) {
       const s = staking[0];
       const earnings = mockData.getStakingEarningsByStakingId(data.staking_id);
-      const lastEarning = earnings.length > 0 ? earnings[earnings.length - 1] : null;
-      const lastDate = lastEarning ? new Date(lastEarning.datetime) : new Date(s.created_date);
-      const hoursSinceLastClaim = (Date.now() - lastDate.getTime()) / (1000 * 60 * 60);
-      return [{
-        datetime: lastEarning ? lastEarning.datetime : null,
-        created_date: s.created_date,
-        isClaimAvailable: hoursSinceLastClaim >= 24 ? 1 : 0,
-      }];
+      const lastEarning =
+        earnings.length > 0 ? earnings[earnings.length - 1] : null;
+      const lastDate = lastEarning
+        ? new Date(lastEarning.datetime)
+        : new Date(s.created_date);
+      const hoursSinceLastClaim =
+        (Date.now() - lastDate.getTime()) / (1000 * 60 * 60);
+      return [
+        {
+          datetime: lastEarning ? lastEarning.datetime : null,
+          created_date: s.created_date,
+          isClaimAvailable: hoursSinceLastClaim >= 24 ? 1 : 0,
+        },
+      ];
     }
     return [];
   }
@@ -193,30 +211,44 @@ class UserModel {
       status: 1,
     });
 
-    mockData.updateUserBalance(data.user_id, 'token_balance', parseFloat(data.token));
+    mockData.updateUserBalance(
+      data.user_id,
+      "token_balance",
+      parseFloat(data.token),
+    );
 
     return { success: true };
   }
 
   async addBalance(data) {
-    return mockData.updateUserBalance(data.user_id, 'MBUSD_balance', data.token);
+    return mockData.updateUserBalance(
+      data.user_id,
+      "MBUSD_balance",
+      data.token,
+    );
   }
 
   async checkSellPlan(data) {
-    const stakings = mockData.getStakingById(data.staking_id, data.staking_period_id, data.user_id);
+    const stakings = mockData.getStakingById(
+      data.staking_id,
+      data.staking_period_id,
+      data.user_id,
+    );
     if (stakings.length > 0) {
       const staking = stakings[0];
       const createdDate = new Date(staking.created_date);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       createdDate.setHours(0, 0, 0, 0);
-      
+
       if (staking.status === 1 && createdDate < today) {
-        return [{
-          id: staking.id,
-          reward_token: staking.reward_token,
-          remaining_quantity: staking.remaining_quantity,
-        }];
+        return [
+          {
+            id: staking.id,
+            reward_token: staking.reward_token,
+            remaining_quantity: staking.remaining_quantity,
+          },
+        ];
       }
     }
     return [];
@@ -230,7 +262,11 @@ class UserModel {
       plan_sell_date: new Date(),
     });
 
-    mockData.updateUserBalance(data.user_id, 'token_balance', parseFloat(newToken));
+    mockData.updateUserBalance(
+      data.user_id,
+      "token_balance",
+      parseFloat(newToken),
+    );
 
     return { success: true };
   }
@@ -268,7 +304,7 @@ class UserModel {
       isblockchainConfirm: 1,
     });
 
-    mockData.updateUserBalance(data.user_id, 'MBUSD_balance', data.token);
+    mockData.updateUserBalance(data.user_id, "MBUSD_balance", data.token);
 
     return { success: true };
   }

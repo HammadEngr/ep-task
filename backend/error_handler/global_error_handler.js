@@ -1,6 +1,7 @@
 const logger = require("../utils/logger");
+const errorLogger = require("./error_logger");
 
-function errorMiddleware(error, req, res, next) {
+function global_error_handler(error, req, res, next) {
   const { status = 500, message, data } = error;
 
   logger.error(`Error: ${message || "Internal server error"}`, {
@@ -20,7 +21,9 @@ function errorMiddleware(error, req, res, next) {
     ...(data && { data }),
   };
 
+  errorLogger.error(`${err.name}: ${err.message}\nStack: ${err.stack}`);
+
   res.status(status).json(errorResponse);
 }
 
-module.exports = errorMiddleware;
+module.exports = global_error_handler;
